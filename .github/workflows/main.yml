@@ -28,3 +28,9 @@ jobs:
           flutter-version: '2.0.0'
       - name: Build
         run: flutter build web --release
+        
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@4.1.0
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: build/web # The folder the action should deploy.
