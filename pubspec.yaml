@@ -37,6 +37,7 @@ dev_dependencies:
   riverpod: ^0.13.1
   flutter_riverpod: ^0.13.1
   hooks_riverpod: ^0.13.1
+  flutter_hooks: ^0.16.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

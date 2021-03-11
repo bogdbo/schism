@@ -3,18 +3,27 @@ import 'package:english_words/english_words.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:test_flutter/src/layout/default_app_bar.dart';
 import 'package:test_flutter/src/layout/default_drawer.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:test_flutter/src/stores/notes_store.dart';
 
-class _NotesState extends State<Notes> {
-  final _suggestions = <WordPair>[];
-  final _saved = <WordPair>{};
-
+class Notes extends HookWidget {
   @override
   Widget build(BuildContext context) {
+    final notes = useProvider(notesProvider.state);
+
     return Scaffold(
       drawer: DefaultDrawer(),
       appBar: DefaultAppBar(title: 'Notes'),
       body: Column(children: [
-        Expanded(child: _buildListViewSuggestions()),
+        notes.length == 0
+            ? Center(child: Text('No notes'))
+            : Expanded(
+                child: ListView(
+                padding: EdgeInsets.all(16.0),
+                reverse: true,
+                children: notes.map((n) => _buildRow(context, n)).toList(),
+              ))
       ]),
       floatingActionButton: FloatingActionButton(
           onPressed: () => Navigator.pushNamed(context, '/new'),
@@ -22,39 +31,9 @@ class _NotesState extends State<Notes> {
     );
   }
 
-  Widget _buildListViewSuggestions() {
-    return ListView.builder(
-      padding: EdgeInsets.all(16.0),
-      reverse: true,
-      itemBuilder: (context, i) {
-        if (i.isOdd) return Divider();
-        final index = i ~/ 2;
-        if (_suggestions.length == 0) {
-          _suggestions.addAll([
-            WordPair.random(),
-            WordPair.random(),
-            WordPair.random(),
-            WordPair.random(),
-            WordPair.random(),
-            WordPair.random(),
-            WordPair.random(),
-            WordPair.random(),
-            WordPair.random()
-          ]);
-        }
-
-        if (index >= _suggestions.length) {
-          return null;
-        }
-
-        return _buildRow(_suggestions[index]);
-      },
-    );
-  }
-
-  Widget _buildRow(WordPair suggestion) {
+  Widget _buildRow(BuildContext context, Note note) {
     return Slidable(
-      key: Key(suggestion.asString),
+      key: Key(note.content),
       actionPane: SlidableScrollActionPane(),
       showAllActionsThreshold: 0.1,
       actionExtentRatio: 1,
@@ -65,11 +44,11 @@ class _NotesState extends State<Notes> {
         child: ListTile(
           leading: CircleAvatar(
             backgroundColor: Colors.indigoAccent,
-            child: Text('help'),
+            child: Text('ABC'),
             foregroundColor: Colors.white,
           ),
-          title: Text(suggestion.asPascalCase),
-          subtitle: Text(suggestion.asUpperCase),
+          title: Text(note.content),
+          subtitle: Text(note.categories?.map((c) => c.title)?.join(', ') ?? 'No categories'),
         ),
       ),
       actions: <Widget>[
@@ -177,17 +156,14 @@ class _NotesState extends State<Notes> {
       ],
       secondaryActions: <Widget>[
         IconSlideAction(
-          caption: 'More',
-          color: Colors.black45,
-          icon: Icons.more_horiz,
-          onTap: () => null,
+          caption: 'Delete',
+          color: Colors.red,
+          icon: Icons.remove_circle_outline,
+          onTap: () {
+            context.read(notesProvider).remove(note);
+          },
         ),
       ],
     );
   }
-}
-
-class Notes extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => new _NotesState();
 }

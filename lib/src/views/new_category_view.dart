@@ -9,7 +9,7 @@ class NewCategory extends ConsumerWidget {
   @override
   Widget build(BuildContext context, watch) {
     return Scaffold(
-        appBar: AppBar(title: Text('Create a new note')),
+        appBar: AppBar(title: Text('Create a new category')),
         body: Column(
           children: <Widget>[
             Card(

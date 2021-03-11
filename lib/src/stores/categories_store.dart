@@ -19,7 +19,7 @@ class Categories extends StateNotifier<List<Category>> {
   }
 
   void remove(Category category) {
-    state = state.where((e) => e.title != category.title);
+    state = state.where((e) => e.title != category.title).toList();
   }
 }
 

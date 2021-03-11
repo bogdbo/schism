@@ -27,6 +27,7 @@ class Categories extends ConsumerWidget {
     }
 
     return ListView(
+        padding: EdgeInsets.all(16.0),
         children:
             categories.map((c) => ListTile(title: Text(c.title))).toList());
   }

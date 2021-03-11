@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:test_flutter/src/views/new_category.dart';
+import 'package:test_flutter/src/views/new_category_view.dart';
 
 import 'src/views/categories_view.dart';
-import 'src/views/new_note.dart';
-import 'src/views/notes.dart';
+import 'src/views/new_note_view.dart';
+import 'src/views/notes_view.dart';
 
 void main() {
   runApp(ProviderScope(child: App()));
