@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:test_flutter/src/views/categories.dart';
-import 'package:test_flutter/src/views/newNote.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:test_flutter/src/views/new_category.dart';
+
+import 'src/views/categories_view.dart';
+import 'src/views/new_note.dart';
 import 'src/views/notes.dart';
 
 void main() {
-  runApp(App());
+  runApp(ProviderScope(child: App()));
 }
 
 class App extends StatelessWidget {
@@ -19,6 +22,7 @@ class App extends StatelessWidget {
         '/': (context) => Notes(),
         '/new': (context) => NewNote(),
         '/categories': (context) => Categories(),
+        '/categories/new': (context) => NewCategory(),
       },
     );
   }
