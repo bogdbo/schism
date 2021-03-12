@@ -7,9 +7,16 @@ class Category {
   Category({@required this.title});
 }
 
+final _defaultCategories = <Category>[
+  Category(title: 'Todo'),
+  Category(title: 'Links'),
+  Category(title: 'Read'),
+  Category(title: 'Funny'),
+];
+
 class Categories extends StateNotifier<List<Category>> {
   Categories([List<Category> initialCategories])
-      : super(initialCategories ?? List<Category>.empty());
+      : super(initialCategories ?? _defaultCategories);
 
   void add(String title) {
     state = [
@@ -24,4 +31,4 @@ class Categories extends StateNotifier<List<Category>> {
 }
 
 final categoriesProvider =
-    StateNotifierProvider<Categories>((ref) => Categories());
+StateNotifierProvider<Categories>((ref) => Categories());

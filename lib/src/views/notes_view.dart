@@ -5,12 +5,14 @@ import 'package:test_flutter/src/layout/default_app_bar.dart';
 import 'package:test_flutter/src/layout/default_drawer.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:test_flutter/src/stores/categories_store.dart';
 import 'package:test_flutter/src/stores/notes_store.dart';
 
 class Notes extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final notes = useProvider(notesProvider.state);
+    final categories = useProvider(categoriesProvider.state);
 
     return Scaffold(
       drawer: DefaultDrawer(),
@@ -19,11 +21,13 @@ class Notes extends HookWidget {
         notes.length == 0
             ? Center(child: Text('No notes'))
             : Expanded(
-                child: ListView(
-                padding: EdgeInsets.all(16.0),
-                reverse: true,
-                children: notes.map((n) => _buildRow(context, n)).toList(),
-              ))
+                child: ListView.separated(
+                    padding: EdgeInsets.all(16.0),
+                    reverse: true,
+                    itemBuilder: (context, index) =>
+                        _buildRow(context, notes[index], categories),
+                    separatorBuilder: (context, index) => Divider(),
+                    itemCount: notes.length))
       ]),
       floatingActionButton: FloatingActionButton(
           onPressed: () => Navigator.pushNamed(context, '/new'),
@@ -31,7 +35,7 @@ class Notes extends HookWidget {
     );
   }
 
-  Widget _buildRow(BuildContext context, Note note) {
+  Widget _buildRow(BuildContext context, Note note, List<Category> categories) {
     return Slidable(
       key: Key(note.content),
       actionPane: SlidableScrollActionPane(),
@@ -40,7 +44,22 @@ class Notes extends HookWidget {
       direction: Axis.horizontal,
       fastThreshold: 0.1,
       child: Container(
-        color: Colors.white,
+        decoration: BoxDecoration(
+          color: note.categories.length > 0 ? Colors.lightGreen : Colors.red,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+              bottomLeft: Radius.circular(10),
+              bottomRight: Radius.circular(10)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
         child: ListTile(
           leading: CircleAvatar(
             backgroundColor: Colors.indigoAccent,
@@ -48,112 +67,11 @@ class Notes extends HookWidget {
             foregroundColor: Colors.white,
           ),
           title: Text(note.content),
-          subtitle: Text(note.categories?.map((c) => c.title)?.join(', ') ?? 'No categories'),
+          subtitle: Text(note.categories?.map((c) => c.title)?.join(', ') ??
+              'No categories'),
         ),
       ),
-      actions: <Widget>[
-        ListView(
-          scrollDirection: Axis.horizontal,
-          children: [
-            IconSlideAction(
-              caption: 'Hello',
-              color: Colors.red,
-              icon: Icons.ac_unit_outlined,
-              onTap: () => null,
-            ),
-            IconSlideAction(
-              caption: 'World',
-              color: Colors.green,
-              icon: Icons.more_horiz,
-              onTap: () => null,
-            ),
-            IconSlideAction(
-              caption: 'What',
-              color: Colors.yellow,
-              icon: Icons.accessibility,
-              onTap: () => null,
-            ),
-            IconSlideAction(
-              caption: 'More',
-              color: Colors.amber,
-              icon: Icons.phone,
-              onTap: () => null,
-            ),
-            IconSlideAction(
-              caption: 'Hello',
-              color: Colors.red,
-              icon: Icons.ac_unit_outlined,
-              onTap: () => null,
-            ),
-            IconSlideAction(
-              caption: 'World',
-              color: Colors.green,
-              icon: Icons.more_horiz,
-              onTap: () => null,
-            ),
-            IconSlideAction(
-              caption: 'What',
-              color: Colors.yellow,
-              icon: Icons.accessibility,
-              onTap: () => null,
-            ),
-            IconSlideAction(
-              caption: 'More',
-              color: Colors.amber,
-              icon: Icons.phone,
-              onTap: () => null,
-            ),
-            IconSlideAction(
-              caption: 'Hello',
-              color: Colors.red,
-              icon: Icons.ac_unit_outlined,
-              onTap: () => null,
-            ),
-            IconSlideAction(
-              caption: 'World',
-              color: Colors.green,
-              icon: Icons.more_horiz,
-              onTap: () => null,
-            ),
-            IconSlideAction(
-              caption: 'What',
-              color: Colors.yellow,
-              icon: Icons.accessibility,
-              onTap: () => null,
-            ),
-            IconSlideAction(
-              caption: 'More',
-              color: Colors.amber,
-              icon: Icons.phone,
-              onTap: () => null,
-            ),
-            IconSlideAction(
-              caption: 'Hello',
-              color: Colors.red,
-              icon: Icons.ac_unit_outlined,
-              onTap: () => null,
-            ),
-            IconSlideAction(
-              caption: 'World',
-              color: Colors.green,
-              icon: Icons.more_horiz,
-              onTap: () => null,
-            ),
-            IconSlideAction(
-              caption: 'What',
-              color: Colors.yellow,
-              icon: Icons.accessibility,
-              onTap: () => null,
-            ),
-            IconSlideAction(
-              caption: 'More',
-              color: Colors.amber,
-              icon: Icons.phone,
-              onTap: () => null,
-            ),
-          ].map((a) => Container(width: 50, child: a)).toList(),
-        )
-      ],
+      actions: [_renderActions(context, note, categories)],
       secondaryActions: <Widget>[
         IconSlideAction(
           caption: 'Delete',
@@ -165,5 +83,36 @@ class Notes extends HookWidget {
         ),
       ],
     );
+  }
+
+  ListView _renderActions(
+      BuildContext context, Note note, List<Category> categories) {
+    return ListView(
+        key: Key('actions'),
+        scrollDirection: Axis.horizontal,
+        children: categories.map((c) {
+          var hasCategory = note.categories.contains(c);
+          return Container(
+              key: Key(c.title),
+              width: 50,
+              child: IconSlideAction(
+                caption: c.title,
+                icon: hasCategory ? Icons.check : Icons.radio_button_unchecked,
+                color: hasCategory ? Colors.green : Colors.black12,
+                onTap: () {
+                  var newNote = Note(
+                    id: note.id,
+                    content: note.content,
+                    categories: hasCategory
+                        ? [
+                            ...note.categories.where(
+                                (existingCategory) => existingCategory != c)
+                          ]
+                        : [...note.categories, c],
+                  );
+                  context.read(notesProvider).update(newNote);
+                },
+              ));
+        }).toList());
   }
 }

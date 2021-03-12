@@ -28,6 +28,20 @@ class Notes extends StateNotifier<List<Note>> {
   void remove(Note note) {
     state = state.where((e) => e.id != note.id).toList();
   }
+
+  void update(Note updatedNote) {
+    state = [
+      for (final note in state)
+        if (note.id == updatedNote.id)
+          Note(
+            id: updatedNote.id,
+            content: updatedNote.content,
+            categories: updatedNote.categories,
+          )
+        else
+          note,
+    ];
+  }
 }
 
 final notesProvider = StateNotifierProvider<Notes>((ref) => Notes());

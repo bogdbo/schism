@@ -26,10 +26,12 @@ class Categories extends ConsumerWidget {
       return Center(child: Text('No categories'));
     }
 
-    return ListView(
+    return ListView.separated(
         padding: EdgeInsets.all(16.0),
-        children:
-            categories.map((c) => ListTile(title: Text(c.title))).toList());
+        itemBuilder: (context, index) =>
+            ListTile(title: Text(categories[index].title)),
+        separatorBuilder: (context, index) => Divider(),
+        itemCount: categories.length);
   }
 
   Widget _buildRow(Category category) {
