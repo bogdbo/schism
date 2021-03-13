@@ -20,8 +20,8 @@ class Notes extends StateNotifier<List<Note>> {
 
   void add({@required String content, List<Categories.Category> categories}) {
     state = [
-      ...state,
       Note(id: UniqueKey(), content: content, categories: categories),
+      ...state,
     ];
   }
 

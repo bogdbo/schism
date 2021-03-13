@@ -64,20 +64,29 @@ class NewNote extends HookWidget {
             )
           ],
         ),
-        floatingActionButton: Row(children: [
-          FloatingActionButton(
-              onPressed: () => Navigator.pop(context),
-              backgroundColor: Colors.red,
-              child: const Icon(Icons.cancel_outlined)),
-          FloatingActionButton(
-              onPressed: () {
-                context
-                    .read(notesProvider)
-                    .add(content: _textController.text, categories: selectedCategories.value);
-                Navigator.pop(context);
-              },
-              backgroundColor: Colors.green,
-              child: const Icon(Icons.check))
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: Stack(children: [
+          Align(
+              alignment: Alignment.bottomLeft,
+              child: Container(
+                  padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
+                  child: FloatingActionButton(
+                      onPressed: () => Navigator.pop(context),
+                      backgroundColor: Colors.red,
+                      child: const Icon(Icons.cancel_outlined)))),
+          Align(
+              alignment: Alignment.bottomRight,
+              child: Container(
+                  padding: EdgeInsets.fromLTRB(0, 0, 16, 0),
+                  child: FloatingActionButton(
+                      onPressed: () {
+                        context.read(notesProvider).add(
+                            content: _textController.text,
+                            categories: selectedCategories.value);
+                        Navigator.pop(context);
+                      },
+                      backgroundColor: Colors.green,
+                      child: const Icon(Icons.check))))
         ]));
   }
 }
