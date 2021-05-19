@@ -44,4 +44,4 @@ class Notes extends StateNotifier<List<Note>> {
   }
 }
 
-final notesProvider = StateNotifierProvider<Notes>((ref) => Notes());
+final notesProvider = StateNotifierProvider<Notes, List<Note>>((ref) => Notes());

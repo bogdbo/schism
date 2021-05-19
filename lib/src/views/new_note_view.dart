@@ -11,7 +11,7 @@ class NewNote extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final categories = useProvider(categoriesProvider.state);
+    final categories = useProvider(categoriesProvider);
     final selectedCategories = useState(<Category>[]);
 
     return Scaffold(
@@ -80,7 +80,7 @@ class NewNote extends HookWidget {
                   padding: EdgeInsets.fromLTRB(0, 0, 16, 0),
                   child: FloatingActionButton(
                       onPressed: () {
-                        context.read(notesProvider).add(
+                        context.read(notesProvider.notifier).add(
                             content: _textController.text,
                             categories: selectedCategories.value);
                         Navigator.pop(context);

@@ -43,7 +43,7 @@ class NewCategory extends ConsumerWidget {
                 child: FloatingActionButton(
                     onPressed: () {
                       context
-                          .read(categoriesProvider)
+                          .read(categoriesProvider.notifier)
                           .add(_textController.text);
                       Navigator.pop(context);
                     },

@@ -10,8 +10,8 @@ import 'package:test_flutter/src/stores/notes_store.dart';
 class Notes extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    final notes = useProvider(notesProvider.state);
-    final categories = useProvider(categoriesProvider.state);
+    final notes = useProvider(notesProvider);
+    final categories = useProvider(categoriesProvider);
 
     return Scaffold(
       drawer: DefaultDrawer(),
@@ -109,7 +109,7 @@ class Notes extends HookWidget {
                           ]
                         : [...note.categories, c],
                   );
-                  context.read(notesProvider).update(newNote);
+                  context.read(notesProvider.notifier).update(newNote);
                 },
               ));
         }).toList());

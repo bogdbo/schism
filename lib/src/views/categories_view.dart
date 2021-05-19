@@ -7,7 +7,7 @@ import 'package:test_flutter/src/stores/categories_store.dart';
 class Categories extends ConsumerWidget {
   @override
   Widget build(BuildContext context, watch) {
-    final categories = watch(categoriesProvider.state);
+    final categories = watch(categoriesProvider);
 
     return Scaffold(
       drawer: DefaultDrawer(),

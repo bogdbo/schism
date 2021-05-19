@@ -31,4 +31,4 @@ class Categories extends StateNotifier<List<Category>> {
 }
 
 final categoriesProvider =
-StateNotifierProvider<Categories>((ref) => Categories());
+StateNotifierProvider<Categories, List<Category>>((ref) => Categories());
